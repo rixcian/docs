@@ -19,3 +19,5 @@ $ VBoxManage modifyhd <path_to_vdi_file> --resize <required_size>
 ```
 
 - **<required_size>** => is in megabytes (so for 20GB use **20480** value; for the calculation you can use this website https://www.convertunits.com/from/GB/to/MB)
+
+6. Then you have to log into virtual machine and use some "Partition Manager" software to resize the main drive (e.g. /dev/sda1 for linux systems)
