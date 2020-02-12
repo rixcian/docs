@@ -2,6 +2,10 @@
 
 ***
 
+### .dockerignore file
+
+It helps to avoid unnecessarily sending large or sensitive files and directories to the daemon and potentially adding them to images.
+
 
 
 ## Useful commands
