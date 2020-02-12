@@ -322,3 +322,100 @@ V *rqt_console* nám začnou vyskakovat zprávy, kterými nás node upozorňuje,
 $ roslaunch [nazev_package] [nazevsouboru.launch]
 ```
 
+Pojďme si napsat vlastní roslaunch soubor. Musíme mít vytvořený nějaký vlastní package, jak na to se dá zjistit v kapitole *Vytváření ROS Package (balíčku)*, kterou najdete v této dokumentaci.
+
+Přesuneme se ke zdrojovým kódům našeho package
+
+```bash
+$ roscd beginner_tutorial
+```
+
+V ní vytvoříme složku *launch* a přesuneme se do ní
+
+```bash
+$ mkdir launch && cd launch
+```
+
+*Pozn. složku, ve které budeme ukládat naše launch soubory se nemusí nutně jmenovat "launch", nicméně je to dobrý zvyk. Příkaz roslaunch se podívá do našeho package a automaticky najde všechny .launch soubory*
+
+Nyní vytvořme soubor *turtlemimic.launch* a vložte do něho tento kód
+
+```xml
+<launch>
+
+    <!-- 
+        Vytvoříme dvě skupiny s namespace tagem turtlesim1 a turtlesim2.
+        Toto nám zajistí spustit dva želví simulátory bez toho aniž by došlo
+        k nějakým konfliktům. 
+    -->
+    <group ns="turtlesim1">
+        <node pkg="turtlesim" name="sim" type="turtlesim_node" />
+    </group>
+
+    <group ns="turtlesim2">
+        <node pkg="turtlesim" name="sim" type="turtlesim_node" />
+    </group>
+
+    <!--
+        Vytvoříme tzv. mimic node s input a output topicy přejmenovanými na turtlesim1 a turtlesim2.
+        Toto přejmenování nám zajístí, že turtlesim2 nám bude kopírovat turtlesim1.
+    --> 
+    <node pkg="turtlesim" name="mimic" type="mimic">
+        <remap from="input" to="turtlesim1/turtle1" />
+        <remap from="output" to="turtlesim2/turtle1" />
+    </node>
+
+</launch>
+```
+
+Tento launch soubor nám vytvoří dva simulátory želvy a zajistí, že 2. želva bude opakovat všechny pohyby, které provádí 1. želva
+
+Nyní nám stačí spustit náš *turtlemimic.launch* soubor
+
+```bash
+$ roslaunch beginner_tutorial turtlemimic.launch
+```
+
+Spustí se nám dvě okna s želvami. Nyní nám stačí poslat zprávu do topicu první želvy.
+
+```bash
+$ rostopic pub /turtlesim1/turtle1/cmd_vel geometry_msgs/Twist -r 1 -- '[2.0, 0.0, 0.0]' '[0.0, 0.0, -1.8]'
+```
+
+Obě želvy by se měli opakovaně točit dokola.
+
+### Vytvoření ROS *msg* a *srv*
+
+- **msg** - jsou jednoduché textové soubory, které popisují jednotlivé položky v ROS zprávách (messages). Tyto soubory jsou používány pro generování zdrojových kódů zpráv.
+- **srv** - soubory, které popisují určitou service. Jsou složené ze dvou částí: request a response
+
+*msg* soubory jsou uloženy ve složce *msg* určitého package, a *srv* soubory zase ve složce *srv* 
+
+Zde jsou příklady *msg* souboru a *srv* souboru
+
+```
+Header header
+string child_frame_id
+geometry_msgs/PoseWithCovariance pose
+geometry_msgs/TwistWithCovariance twist
+```
+
+```
+int64 A
+int64 B
+---
+int64 Sum
+```
+
+#### Použití msg
+
+Opět použijeme náš již vytvořený package *beginner_tutorial*
+
+```bash
+$ roscd beginner_tutorial
+$ mkdir msg
+$ echo "int64 num" > msg/Num.msg
+```
+
+Pokračování => http://wiki.ros.org/ROS/Tutorials/CreatingMsgAndSrv#Using_msg
+
