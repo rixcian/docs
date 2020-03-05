@@ -63,3 +63,40 @@ It helps to avoid unnecessarily sending large or sensitive files and directories
 **Remove all containers**
 
 `$ docker rm $(docker ps -a -q)`
+
+**Execute bash in container**
+
+`$ docker exec -it <container_name> /bin/bash`
+
+
+
+### Docker volumes
+
+**List all volumes**
+
+`$ docker volume ls`
+
+**Create a volume**
+
+`$ docker volume create <volume_name>`
+
+**Inspect volume**
+
+`$ docker volume inspect <volume_name>`
+
+**Delete volume**
+
+`$ docker volume rm <volume_name> `
+
+**Delete all unused volumes**
+
+`$ docker volume prune`
+
+
+
+
+
+## Useful tools
+
+- **docker-slim** - minifying docker image containers
+  - https://github.com/docker-slim/docker-slim
